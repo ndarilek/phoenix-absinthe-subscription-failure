@@ -57,6 +57,7 @@ Vagrant.configure("2") do |config|
     $HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring
     $HOME/.asdf/bin/asdf install nodejs 8.4.0
     $HOME/.asdf/bin/asdf global nodejs 8.4.0
+    echo export NODE_ENV=development >>~/.bashrc
   SHELL
 
 end
