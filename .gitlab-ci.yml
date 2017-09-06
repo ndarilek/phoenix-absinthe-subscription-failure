@@ -10,6 +10,7 @@ before_script:
 build:
   stage: build
   script:
+  - env
   - docker build -f Dockerfile.build -t build .
   - docker create --name mix_docker build
   - docker cp mix_docker:/opt/app/_build/prod/rel/app/releases/0.0.1/app.tar.gz app.tar.gz
