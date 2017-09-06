@@ -1,12 +1,16 @@
 image: docker:latest
+
 services:
   - docker:dind
+
 variables:
   DOCKER_DRIVER: overlay
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   LATEST_TAG: $CI_REGISTRY_IMAGE:latest
+
 before_script:
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
 build:
   stage: build
   script:
@@ -15,6 +19,10 @@ build:
   - docker create --name mix_docker build
   - docker cp mix_docker:/opt/app/_build/prod/rel/app/releases/0.0.1/app.tar.gz app.tar.gz
   - docker build -f Dockerfile.release -t $IMAGE_TAG .
-  - docker tag $IMAGE_TAG $LATEST_TAG
   - docker push $IMAGE_TAG
+
+deploy:
+  stage: deploy
+  script:
+  - docker tag $IMAGE_TAG $LATEST_TAG
   - docker push $LATEST_TAG
