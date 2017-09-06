@@ -30,6 +30,18 @@ config :app, AppWeb.Endpoint,
 # configured to run both http and https servers on
 # different ports.
 
+# Watch static and templates for browser reloading.
+config :app, AppWeb.Endpoint,
+  live_reload: [
+    patterns: [
+      ~r{assets/.*$},
+      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
+      ~r{priv/gettext/.*(po)$},
+      ~r{lib/app_web/views/.*(ex)$},
+      ~r{lib/app_web/templates/.*(eex)$}
+    ]
+  ]
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
