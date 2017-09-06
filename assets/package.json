@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/apollo": "^2.0.0",
+    "apollo-phoenix-websocket": "^0.6.2",
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.2.1",
+    "nuxt": "^1.0.0-rc9",
+    "nuxt-class-component": "^1.0.3",
+    "toastr": "^2.1.2",
+    "vee-validate": "^2.0.0-rc.9",
+    "vuex-class": "^0.2.0",
+    "vuex-persistedstate": "^2.0.0"
+  },
+  "devDependencies": {
+    "ts-loader": "^2.3.4",
+    "typescript": "^2.5.2"
+  }
+}
