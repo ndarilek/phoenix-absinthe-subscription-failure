@@ -24,5 +24,6 @@ build:
 deploy:
   stage: deploy
   script:
+  - docker pull $IMAGE_TAG
   - docker tag $IMAGE_TAG $LATEST_TAG
   - docker push $LATEST_TAG
