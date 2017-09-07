@@ -1,7 +1,13 @@
 version: "3.3"
 
 volumes:
+
   - postgres
+
+networks:
+
+  traefik_http:
+    external: true
 
 services:
 
@@ -19,3 +25,10 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       HOST: "${HOST}"
       SECRET_KEY_BASE: "${SECRET_KEY_BASE}"
+    networks:
+      - traefik_http
+    deploy:
+      labels:
+        traefik.docker.network: traefik_http
+        traefik.frontend.rule: "Host:${HOST}"
+        traefik.port: 4000
