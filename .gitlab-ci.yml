@@ -7,6 +7,7 @@ variables:
   DOCKER_DRIVER: overlay
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   LATEST_TAG: $CI_REGISTRY_IMAGE:latest
+  DOMAIN: example.com
 
 before_script:
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
@@ -23,9 +24,42 @@ build:
 
 deploy:
   stage: deploy
+  variables:
+    HOST: www.$DOMAIN
   script:
   - docker pull $IMAGE_TAG
   - docker tag $IMAGE_TAG $LATEST_TAG
   - docker push $LATEST_TAG
+  - docker stack deploy -c docker-compose.yml $CI_PROJECT_NAME
+  environment:
+    name: production
+    url: https://$HOST
   only:
   - master
+
+deploy_review:
+  stage: deploy
+  variables:
+    HOST: $CI_ENVIRONMENT_SLUG.$DOMAIN
+  script:
+  - docker pull $IMAGE_TAG
+  - docker stack deploy -c docker-compose.yml $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$HOST
+    on_stop: stop_review
+  only:
+  - branches
+  except:
+  - master
+
+stop_review:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  script:
+  - docker stack rm $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME
+  when: manual
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
